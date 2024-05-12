@@ -1,7 +1,10 @@
 package com.att.tdp.bisbis10.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +12,13 @@ import java.util.List;
 public class Restaurant {
     private @Id @GeneratedValue Long id;
     private String name;
-    private float rating;
     private boolean isKosher;
     @ElementCollection
     private List<String> cuisines;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Rating> ratings;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Dish> dishes;
@@ -49,14 +55,6 @@ public class Restaurant {
         this.name = name;
     }
 
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
     public boolean getIsKosher() {
         return isKosher;
     }
@@ -71,5 +69,16 @@ public class Restaurant {
 
     public void setCuisines(List<String> cuisines) {
         this.cuisines = new ArrayList<>(cuisines);
+    }
+
+    @JsonGetter("averageRating")
+    public Double getAverageRating() {
+        Double sum = 0.0;
+        DecimalFormat decimalFormat = new DecimalFormat("0.#");
+        if(ratings==null || ratings.size()==0) return sum;
+        for(Rating rating: ratings ){
+            sum+=rating.getRating();
+        }
+        return Double.valueOf(decimalFormat.format(sum/ratings.size()));
     }
 }

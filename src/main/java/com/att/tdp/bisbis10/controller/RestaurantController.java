@@ -2,6 +2,7 @@ package com.att.tdp.bisbis10.controller;
 
 import com.att.tdp.bisbis10.dto.RestaurantDTO;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.service.RatingService;
 import com.att.tdp.bisbis10.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class RestaurantController {
     @Autowired
     private RestaurantService service;
 
-    @GetMapping()
+    @GetMapping
     ResponseEntity<List<?>> getRestaurants(@RequestParam(name = "cuisine", required = false) String cuisine){
         try{
             if(cuisine!=null && !cuisine.isEmpty()){
@@ -45,18 +46,19 @@ public class RestaurantController {
         return ResponseEntity.status(201).body(null);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> editRestaurant(@PathVariable Long id, @RequestBody RestaurantDTO newRestaurantDTO){
         service.editRestaurant(id, newRestaurantDTO);
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<?> deleteRestaurant(@PathVariable Long id){
         try{
             service.deleteRestaurant(id);
             return ResponseEntity.status(204).body(null);
         } catch(Exception e){
+            System.out.println(e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
 
