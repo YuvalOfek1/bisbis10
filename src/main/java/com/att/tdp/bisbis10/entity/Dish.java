@@ -3,6 +3,8 @@ package com.att.tdp.bisbis10.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Dish {
     private @Id
@@ -15,6 +17,10 @@ public class Dish {
     @JoinColumn(name = "restaurant_id", nullable = false, referencedColumnName = "id")
     @JsonIgnore
     private Restaurant restaurant;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.REMOVE)
+    private List<OrderItem> orderItems;
 
     public Dish(){}
 

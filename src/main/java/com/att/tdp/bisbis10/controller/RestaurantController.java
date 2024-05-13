@@ -25,19 +25,15 @@ public class RestaurantController {
             if(cuisine!=null && !cuisine.isEmpty()){
                 return ResponseEntity.ok(service.getRestaurantsByCuisine(cuisine));
             }
-            else{
-                return ResponseEntity.ok(service.getAllRestaurants());
-            }
+            return ResponseEntity.ok(service.getAllRestaurants());
         } catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-
+            return ResponseEntity.status(500).body(null);
         }
     }
 
     @GetMapping("/{id}")
     ResponseEntity<?> getRestaurantById(@PathVariable Long id){
-        Optional<Restaurant> restaurant = service.getRestaurantById(id);
-        return ResponseEntity.ok(restaurant.orElse(null));
+        return ResponseEntity.ok(service.getRestaurantById(id).orElse(null));
     }
 
     @PostMapping
@@ -58,7 +54,6 @@ public class RestaurantController {
             service.deleteRestaurant(id);
             return ResponseEntity.status(204).body(null);
         } catch(Exception e){
-            System.out.println(e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
 

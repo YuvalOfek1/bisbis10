@@ -19,15 +19,13 @@ public class DishService {
     RestaurantService restService;
 
     public Dish addDish(Long restId, DishDTO dishDTO){
+        if(dishDTO.price()<0) return null;
         Optional<Restaurant> optionalRest = restService.getRestaurantById(restId);
         if(optionalRest.isPresent()){
             Restaurant rest = optionalRest.get();
             List<Dish> dishes = rest.getDishes();
             if(dishes.stream().map(Dish::getName).anyMatch(dishName->dishName==dishDTO.name())) return null;
-            Dish toCreate = new Dish(dishDTO.name(), dishDTO.description(), dishDTO.price(), rest);
-            repository.save(toCreate);
-            return toCreate;
-
+            return repository.save(dishDtoToEntity(dishDTO, rest));
         }
         return null;
     }
@@ -38,8 +36,8 @@ public class DishService {
         if(newDish.description()!= null) toUpdate.setDescription(newDish.description());
         if(newDish.name() != null) toUpdate.setName(newDish.name());
         if(newDish.price() != null){
-            if(newDish.price()>=0) toUpdate.setPrice(newDish.price());
-            else throw new IllegalArgumentException("Price cannot be negative");
+            if(newDish.price() <0 ) throw new IllegalArgumentException("Price cannot be negative");
+            toUpdate.setPrice(newDish.price());
         }
         return repository.save(toUpdate);
 
@@ -55,13 +53,10 @@ public class DishService {
     }
 
     public List<Dish> getDishesByRestaurantId(Long id) {
-//        Optional<Restaurant> rest = restService.getRestaurantById(id);
-//        if(!rest.isPresent()){
-//            return null;
-//        }
-//        Restaurant restaurant = rest.get();
-//        return restaurant.getDishes();
         return repository.getDishesByRestaurantId(id);
+    }
 
+    private Dish dishDtoToEntity(DishDTO dishDTO, Restaurant rest){
+        return new Dish(dishDTO.name(), dishDTO.description(), dishDTO.price(), rest);
     }
 }

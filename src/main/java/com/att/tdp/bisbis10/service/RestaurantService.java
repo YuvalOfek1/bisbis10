@@ -24,6 +24,10 @@ public class RestaurantService {
         );
     }
 
+    private Restaurant restaurantDtoToEntity(RestaurantDTO restaurantDTO){
+        return new Restaurant(restaurantDTO.name(), restaurantDTO.isKosher(), restaurantDTO.cuisines());
+    }
+
     public List<RestaurantDTO> getAllRestaurants() {
         return repository.findAll().stream().map(this::restaurantToDTO_without_dishes).toList();
     }
@@ -37,7 +41,7 @@ public class RestaurantService {
     }
 
     public void createRestaurant(RestaurantDTO newRestaurant) {
-        repository.save(restaurantDtoToEntity(newRestaurant)); //TODO: check if works
+        repository.save(restaurantDtoToEntity(newRestaurant));
     }
 
     public void editRestaurant(Long id, RestaurantDTO newRestaurantDTO) {
@@ -53,13 +57,5 @@ public class RestaurantService {
         repository.deleteById(id);
     }
 
-
-    public Restaurant restaurantDtoToEntity(RestaurantDTO restaurantDTO){
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(restaurantDTO.name());
-        restaurant.setIsKosher(restaurantDTO.isKosher());
-        restaurant.setCuisines(restaurantDTO.cuisines());
-        return restaurant;
-    }
 
 }

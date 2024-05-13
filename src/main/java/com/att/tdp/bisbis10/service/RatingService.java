@@ -25,21 +25,10 @@ public class RatingService {
         r.setRating(rating.rating());
         r.setRestaurant(rest);
         ratingRepository.save(r);
-
-//        editRestaurantAvgRating(rating.restaurantId());
     }
 
     private boolean isRatingValid(Float rating){
         return rating >= 1 && rating <= 5;
     }
 
-//    private void editRestaurantAvgRating(Long restId){
-//        DecimalFormat decimalFormat = new DecimalFormat("0.##");
-//        Float avgRating = Float.valueOf(decimalFormat.format(ratingRepository.getAverageRating(restId)));
-//        restaurantService.addRating(restId, avgRating);
-//    }
-
-//    public void deleteByRestaurantId(Long restId){
-//        ratingRepository.deleteByRestaurantId(restId);
-//    }
 }

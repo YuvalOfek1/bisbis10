@@ -17,15 +17,14 @@ public class DishController {
 
     @PostMapping
     ResponseEntity<?> addDish(@PathVariable Long restId, @RequestBody DishDTO dishDto){
-        System.out.println("ID of restaurant " + restId);
         Dish dish = service.addDish(restId, dishDto);
-        if(dish==null) return ResponseEntity.status(500).body(null);
-        return ResponseEntity.ok(null);
+        if(dish != null) return ResponseEntity.ok(null);
+        return ResponseEntity.status(500).body("Error while adding a dish");
     }
 
     @PutMapping("/{dishId}")
     ResponseEntity<?> updateDish(@PathVariable Long dishId, @RequestBody DishDTO dishDto){
-        if(service.updateDish(dishId, dishDto) ==null) return ResponseEntity.status(500).body(null);
+        service.updateDish(dishId, dishDto);
         return ResponseEntity.ok(null);
     }
 

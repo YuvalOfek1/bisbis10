@@ -44,7 +44,7 @@ public class OrderService {
 
     }
 
-    public OrderItem orderItemFromOrderItemDto(OrderItemDTO orderItemDto){
+    private OrderItem orderItemFromOrderItemDto(OrderItemDTO orderItemDto){
         OrderItem orderItem = new OrderItem();
         orderItem.setDish(dishService.getDishById(orderItemDto.dishId()).orElse(null));
         orderItem.setAmount(orderItemDto.amount());
